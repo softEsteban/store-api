@@ -22,7 +22,9 @@ export class DatabaseService {
 
     if (this.dbProvider) {
       const dbQuery = await this.dbProvider.useValue.query(query);
+      // console.log('DB QUERY', dbQuery);
       rows = dbQuery.rows;
+      console.log('ROWS', rows);
       return rows;
     }
   }
