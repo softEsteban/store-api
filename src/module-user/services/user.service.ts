@@ -70,7 +70,7 @@ export class UserService {
                    VALUES ('${uid}', '${dUser.document}', '${dUser.name}', '${dUser.lastname}', '${dUser.password}')`;
       this.databaseService.queryDatabase(query);
       return {
-        messg: `User ${uid + '' + dUser.name} was created!`,
+        messg: `User ${uid + '' + dUser.name + ' '} was created!`,
         data: '',
         result: true,
       };
