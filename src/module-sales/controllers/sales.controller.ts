@@ -9,6 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import DFilter from '../dtos/filter.dto';
 import DSale from '../dtos/sale.dto';
 import DSaleUpdate from '../dtos/sale.update.dto';
 
@@ -42,5 +43,17 @@ export class SalesController {
   @ApiOperation({ summary: 'Delete a sale' })
   public async deleteSale(@Param('sale_id') sale_id: string) {
     return this.salesService.deleteSale(sale_id);
+  }
+
+  @Post('/getTotalByDay')
+  @ApiOperation({ summary: 'Get the total sold in one day ' })
+  public async getTotalByDay(@Body() dFilter: DFilter) {
+    return this.salesService.getTotalByDay(dFilter);
+  }
+
+  @Get('/getTotalByMonth/:month')
+  @ApiOperation({ summary: 'Get the total sold in one day ' })
+  public async getTotalByMonth(@Param('month') month: string) {
+    return this.salesService.getTotalByMonth(month);
   }
 }

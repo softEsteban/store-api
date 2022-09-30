@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { DatabaseService } from 'src/module-database/services/database.service';
+import DFilter from '../dtos/filter.dto';
 import DSale from '../dtos/sale.dto';
 import DSaleUpdate from '../dtos/sale.update.dto';
 
@@ -102,6 +103,72 @@ export class SalesService {
       let result = await this.databaseService.queryDatabase(query);
       return {
         messg: `Sale has been updated successfully!`,
+        data: result,
+        result: true,
+      };
+    } catch (error) {
+      console.log(`Error at ${method}:` + error);
+    }
+  }
+
+  /**
+   * Gets the total sold by one day
+   * @param dFilter The date to query
+   * @returns Object with request status
+   * @memberof SalesService
+   * @author Esteban Toro
+   */
+  async getTotalByDay(dFilter: DFilter) {
+    let method = 'getTotalByDay';
+    try {
+      let query = `SELECT COALESCE(tsal.qty * tprod.price, 0) AS total
+                   FROM store_model.sales tsal,
+                        store_model.products tprod
+                   WHERE sale_at BETWEEN '${dFilter.date} 00:00:00' AND '${dFilter.date} 12:00:00'
+                   AND tprod.id = tsal.product_id `;
+      let result = await this.databaseService.queryDatabase(query);
+      if (!result[0]) {
+        return {
+          messg: `There were no sales that day`,
+          data: result,
+          result: true,
+        };
+      }
+      return {
+        messg: `Total sold in ${dFilter.date} was ${result[0]['total']}`,
+        data: result,
+        result: true,
+      };
+    } catch (error) {
+      console.log(`Error at ${method}:` + error);
+    }
+  }
+
+  /**
+   * Gets the total sold by one month
+   * @param month The month number
+   * @returns Object with request status
+   * @memberof SalesService
+   * @author Esteban Toro
+   */
+  async getTotalByMonth(month: string) {
+    let method = 'getTotalByMonth';
+    try {
+      let query = `SELECT COALESCE(tsal.qty * tprod.price, 0) AS total
+                   FROM store_model.sales tsal,
+                        store_model.products tprod
+                   WHERE sale_at BETWEEN '2022-${month}-01 00:00:00' AND '2022-${month}-30 12:00:00'
+                   AND tprod.id = tsal.product_id `;
+      let result = await this.databaseService.queryDatabase(query);
+      if (!result[0]) {
+        return {
+          messg: `There were no sales that month`,
+          data: result,
+          result: true,
+        };
+      }
+      return {
+        messg: `Total sold in month number ${month} was ${result[0]['total']}`,
         data: result,
         result: true,
       };
