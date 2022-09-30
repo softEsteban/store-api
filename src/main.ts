@@ -8,7 +8,7 @@ async function bootstrap() {
   //Swagger settings
   const config = new DocumentBuilder()
     .setTitle('Store API')
-    .setDescription('Store API for Tres Pi Medios')
+    .setDescription('Microservices Store API for Tres Pi Medios')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
